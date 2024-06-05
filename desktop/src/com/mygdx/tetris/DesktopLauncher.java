@@ -7,11 +7,9 @@ import com.mygdx.tetris.Tetris;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-		config.setForegroundFPS(60);
 		config.setTitle("Tetris");
-		new Lwjgl3Application(new Tetris(), config);
+		config.setWindowSizeLimits( 1152, 648, 1920, 1080 );
 
-//		Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
-//		new Lwjgl3Application(new Tetris(), configuration);
+		new Lwjgl3Application(new Tetris(), config);
 	}
 }
