@@ -8,12 +8,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class Tetris extends ApplicationAdapter {
 	public static final int WIDTH = 1920;
 	public static final int HEIGHT = 1080;
-	public static final int FAME_WIDTH = 688;
+	public static final int FRAME_WIDTH = 688;
 	public static final int FRAME_HEIGHT = HEIGHT;
 
 	private OrthographicCamera camera;
@@ -23,22 +25,25 @@ public class Tetris extends ApplicationAdapter {
 	private ScreenViewport viewport;
 	private Sound sound;
 	private Texture[][] textureField;
-	private Texture[][] Figure;
+	private Texture[][] figureToChange;
 	private Texture backGround;
+	private Texture pauseButton;
+	private Thread gameThread;
 
 	private boolean[][] map;
 	private int height;
 	private int width;
-	private boolean gameStarted;
 	private boolean gamePaused;
 	private boolean gameEnded;
+	private boolean gameLost;
 	private boolean rightKeyPressed;
 	private boolean leftKeyPressed;
 	private boolean upKeyPressed;
 	private boolean downKeyPressed;
 	private boolean spaceKeyPressed;
-	private long startTime;
-	private long pauseTime;
+	private long gamePauseTime;
+	private long gameEndedTime;
+	private long soundId;
 	private int score;
 	private Field field;
 	private Figure figure;
@@ -48,20 +53,24 @@ public class Tetris extends ApplicationAdapter {
 		height = 22;
 		width = 14;
 		map = new boolean[height][width];
-		gameStarted = false;
 		gamePaused = false;
 		gameEnded = false;
+		gameLost = false;
 		rightKeyPressed = false;
 		leftKeyPressed = false;
 		upKeyPressed = false;
 		downKeyPressed = false;
 		spaceKeyPressed = false;
-		startTime = 0;
-		pauseTime = 0;
+		gamePauseTime = 0;
+		gameEndedTime = 0;
 		score = 0;
+		field = new Field();
 		textureField = field.getField();
+		gameThread = new Thread();
 
-		sound = Gdx.audio.newSound(Gdx.files.internal("data/bad_piggies_theme.wav"));
+		sound = Gdx.audio.newSound(Gdx.files.internal("data/Megalovania.wav"));
+		soundId = sound.play();
+		sound.setLooping(soundId, true);
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		font = new BitmapFont();
@@ -105,28 +114,59 @@ public class Tetris extends ApplicationAdapter {
 
 				return true;
 			};
+
+			@Override
+			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+				// Convert screen coordinates to world coordinates
+				Vector3 worldCoordinates = viewport.unproject(new Vector3(screenX, screenY, 0));
+				float worldX = worldCoordinates.x;
+				float worldY = worldCoordinates.y;
+
+				// Button coordinates and dimensions
+				float buttonX = 1500f;
+				float buttonY = 270f;
+				float buttonWidth = 200f;
+				float buttonHeight = 200f;
+
+				// Check if the click is within the button bounds
+				if (
+					worldX > buttonX &&
+					worldX < buttonX + buttonWidth &&
+					worldY > buttonY &&
+					worldY < buttonY + buttonHeight
+				) {
+					System.out.println("Pause button pressed"); // Debug message
+					gamePaused = true;
+					gamePauseTime = TimeUtils.millis();
+					return true; // Indicate the event was handled
+				}
+				return false;
+			}
 		});
 
 		backGround = new Texture("data/background.png");
+		pauseButton = new Texture("data/pause-play.png");
 		field = new Field();
-		viewport = new ScreenViewport();
+		viewport = new ScreenViewport(camera);
 	}
 
 	@Override
 	public void render () {
 //		System.out.println("Rendered");// may be removed
 		if (!gameEnded) {
-			batch.setProjectionMatrix(viewport.getCamera().combined);
-			batch.begin();
-			batch.draw(
-					backGround,
-					(float) - Gdx.graphics.getWidth() / 2,
-					(float) - Gdx.graphics.getHeight() / 2,
-					viewport.getWorldWidth(),
-					viewport.getWorldHeight()
-			);
-			field.draw(batch);
-			batch.end();
+			drawMainScreen();
+			if (gameLost) {
+				gameEnded = true;
+				gameEndedTime = TimeUtils.millis();
+			}
+		} else if (gamePaused) {
+			drawPauseScreen();
+			gamePauseTime = TimeUtils.millis();
+		} else {
+			drawEndScreen();
+			if (TimeUtils.timeSinceMillis(gameEndedTime) > 2000) {
+				create();
+			}
 		}
 	}
 
@@ -137,9 +177,10 @@ public class Tetris extends ApplicationAdapter {
 		font.dispose();
 		batch.dispose();
 		shapeRenderer.dispose();
-		batch.dispose();
 		backGround.dispose();
+		pauseButton.dispose();
 		field.dispose();
+		batch.dispose();
 	}
 
 	@Override
@@ -151,16 +192,45 @@ public class Tetris extends ApplicationAdapter {
 	@Override
 	public void pause() {
 		System.out.println("Paused");// may be removed
+		gamePaused = true;
 	}
 
 	@Override
 	public void resume() {
 		System.out.println("Resumed");// may be removed
+		gamePaused = false;
 	}
 
-	private void draw() {
-		//TODO: Implement draw logic
+	private void drawMainScreen() {
+		//TODO: Implement drawMainScreen logic
 
+		batch.setProjectionMatrix(viewport.getCamera().combined);
+		batch.begin();
+		batch.draw(
+				backGround,0,30,
+				viewport.getWorldWidth(),
+				viewport.getWorldHeight()
+		);
+		batch.draw(
+				pauseButton,
+				(float) 1500,
+				(float) 270,
+				200,
+				200
+		);
+
+		figure = new Figure();
+		figureToChange = figure.getShape();
+		field.draw(batch, textureField);
+		batch.end();
+	}
+
+	private void drawPauseScreen() {
+		//TODO: Implement drawPauseScreen logic
+	}
+
+	private void drawEndScreen() {
+		//TODO: Implement drawEndScreen logic
 	}
 
 	private void newMap() {

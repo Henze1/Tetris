@@ -18,12 +18,15 @@ public class Figure {
     private int[][] shapeNumbers;
     private Texture[][] shapes;
     private final List<Texture> blocks;
+    private final Random random;
 
     public Figure() {
-        Random random = new Random();
+        blocks = new ArrayList<>();
+        random = new Random();
+    }
+    public void setFigure() {
         int value = random.nextInt(7);
 
-        blocks = new ArrayList<>();
         blocks.add(new Texture("data/7251.png"));//red,0
         blocks.add(new Texture("data/7252.png"));//blue,1
         blocks.add(new Texture("data/7253.png"));//green,2
@@ -56,6 +59,7 @@ public class Figure {
                 setZShape(random.nextInt(7));
                 break;
         }
+
     }
 
     private void setIShape(int num) {

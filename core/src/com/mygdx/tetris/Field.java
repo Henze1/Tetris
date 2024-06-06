@@ -1,6 +1,6 @@
 package com.mygdx.tetris;
 
-import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
@@ -13,11 +13,13 @@ public class Field {
         borderTexture = new Texture("data/7263.png");
         freeSpaceTexture = new Texture("data/7262.png");
 
-        for (int row = 0; row < 22; row++) {
-            for (int col = 0; col < 12; col++) {
+        for (int row = 0; row < 21; row++) {
+            for (int col = 1; col < 13; col++) {
                 field[row][col] = freeSpaceTexture;
             }
         }
+
+
 
         for (int row = 0; row < 22; row++) {
             field[row][0] = borderTexture;
@@ -30,20 +32,28 @@ public class Field {
         }
     }
 
-    public void draw(Batch batch) {
+    public void draw(Batch batch, Texture[][] field) {
         final int squareSize = 49;
-        final int matrixWidth = 14;
-        final int matrixHeight = 21;
-        final int startX = -Gdx.graphics.getWidth() / 2 + 618;
-        final int startY = -Gdx.graphics.getHeight() / 2;
+        int matrixHeight = 22;
+        int matrixWidth = 14;
+        int startX = 615;
+        int startY = 30;
 
         for (int row = 0; row < matrixHeight; row++) {
             for (int col = 0; col < matrixWidth; col++) {
                 if (row == matrixHeight - 1 || col == 0 || col == matrixWidth - 1) {
                     float x = startX + col * squareSize;
                     float y = startY + (matrixHeight - row - 1) * squareSize;
-                    batch.draw(borderTexture, x, y, squareSize, squareSize);
+                    batch.draw(field[row][col], x, y, squareSize, squareSize);
                 }
+            }
+        }
+
+        for (int row = 0; row < matrixHeight - 1; row++) {
+            for (int col = 1; col < matrixWidth - 1; col++) {
+                float x = startX + col * squareSize;
+                float y = startY + (matrixHeight - row - 1) * squareSize;
+                batch.draw(field[row][col], x, y, squareSize, squareSize);
             }
         }
     }
