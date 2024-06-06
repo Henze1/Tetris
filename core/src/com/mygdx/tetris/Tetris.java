@@ -34,6 +34,9 @@ public class Tetris extends ApplicationAdapter {
 	private boolean gameEnded;
 	private boolean rightKeyPressed;
 	private boolean leftKeyPressed;
+	private boolean upKeyPressed;
+	private boolean downKeyPressed;
+	private boolean spaceKeyPressed;
 	private long startTime;
 	private long pauseTime;
 	private int score;
@@ -50,9 +53,13 @@ public class Tetris extends ApplicationAdapter {
 		gameEnded = false;
 		rightKeyPressed = false;
 		leftKeyPressed = false;
+		upKeyPressed = false;
+		downKeyPressed = false;
+		spaceKeyPressed = false;
 		startTime = 0;
 		pauseTime = 0;
 		score = 0;
+		textureField = field.getField();
 
 		sound = Gdx.audio.newSound(Gdx.files.internal("data/bad_piggies_theme.wav"));
 		batch = new SpriteBatch();
@@ -69,11 +76,30 @@ public class Tetris extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(new InputAdapter() {
 			@Override
 			public boolean keyDown(int keycode) {
-				if (keycode == Input.Keys.RIGHT) {
+				if (
+					keycode == Input.Keys.RIGHT ||
+					keycode == Input.Keys.D
+				) {
 					handleRightClick();
-				} else if (keycode == Input.Keys.LEFT) {
+				} else if (
+					keycode == Input.Keys.LEFT ||
+					keycode == Input.Keys.A
+				) {
 					handleLeftClick();
-				} else if (keycode == Input.Keys.SPACE) {
+				} else if (
+					keycode == Input.Keys.UP ||
+					keycode == Input.Keys.W
+				) {
+					handleUpClick();
+				} else if (
+					keycode == Input.Keys.DOWN ||
+					keycode == Input.Keys.S
+				) {
+					handleDownClick();
+				} else if (
+					keycode == Input.Keys.SPACE ||
+					keycode == Input.Keys.ESCAPE
+				) {
 					handleSpaceClick();
 				}
 
@@ -88,7 +114,7 @@ public class Tetris extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-//		System.out.println("Rendered");
+//		System.out.println("Rendered");// may be removed
 		if (!gameEnded) {
 			batch.setProjectionMatrix(viewport.getCamera().combined);
 			batch.begin();
@@ -106,7 +132,11 @@ public class Tetris extends ApplicationAdapter {
 
 	@Override
 	public void dispose () {
-//		System.out.println("Disposed");
+		System.out.println("Disposed");// may be removed
+		sound.dispose();
+		font.dispose();
+		batch.dispose();
+		shapeRenderer.dispose();
 		batch.dispose();
 		backGround.dispose();
 		field.dispose();
@@ -114,18 +144,23 @@ public class Tetris extends ApplicationAdapter {
 
 	@Override
 	public void resize(int width, int height) {
-//		System.out.println("Resized");
+		System.out.println("Resized");// may be removed
 		viewport.update(width, height);
 	}
 
 	@Override
 	public void pause() {
-//		System.out.println("Paused");
+		System.out.println("Paused");// may be removed
 	}
 
 	@Override
 	public void resume() {
-//		System.out.println("Resumed");
+		System.out.println("Resumed");// may be removed
+	}
+
+	private void draw() {
+		//TODO: Implement draw logic
+
 	}
 
 	private void newMap() {
@@ -141,17 +176,27 @@ public class Tetris extends ApplicationAdapter {
 
 	private void handleRightClick() {
 		//TODO: Implement handleRightClick logic
-		System.out.println("Right Clicked");
+		System.out.println("Right or D Clicked");
 	}
 
 	private void handleLeftClick() {
 		//TODO: Implement handleLeftClick logic
-		System.out.println("Left Clicked");
+		System.out.println("Left or A Clicked");
+	}
+
+	private void handleDownClick() {
+		//TODO: Implement handleDownClick logic
+		System.out.println("Down or S Clicked");
+	}
+
+	private void handleUpClick() {
+		//TODO: Implement handleUpClick logic
+		System.out.println("Up or W Clicked");
 	}
 
 	private void handleSpaceClick() {
 		//TODO: Implement handleSpaceClick logic
-		System.out.println("Space Clicked");
+		System.out.println("Space or ESCAPE Clicked");
 	}
 
 
