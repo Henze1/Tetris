@@ -65,4 +65,27 @@ public class Field {
     public Texture[][] getField() {
         return field;
     }
+
+    public void updateField(Figure figure) {
+        int x , y;
+        int row, col;
+
+        if(figure.getSize() == 2) {
+            for (row = 6, x = 0; row < 8 && x < figure.getSize(); row++, x++) {
+                for (col = 0, y = 0; col < 4 && y < figure.getSize(); col++, y++) {
+                    if (figure.getShapeNumbers()[x][y] == 1) {
+                        field[col][row] = figure.getShape()[x][y];
+                    }
+                }
+            }
+        } else {
+            for (row = 5, x = 0; row < 9 && x < figure.getSize(); row++, x++) {
+                for (col = 0, y = 0; col < 4 && y < figure.getSize(); col++, y++) {
+                    if (figure.getShapeNumbers()[x][y] == 1) {
+                        field[col][row] = figure.getShape()[x][y];
+                    }
+                }
+            }
+        }
+    }
 }

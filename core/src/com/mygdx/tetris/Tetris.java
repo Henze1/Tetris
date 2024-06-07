@@ -11,6 +11,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.tetris.threads.FieldUpdateThread;
+import com.mygdx.tetris.threads.FigureGenThread;
+
+import java.util.Arrays;
 
 public class Tetris extends ApplicationAdapter {
 	public static final int WIDTH = 1920;
@@ -28,7 +32,6 @@ public class Tetris extends ApplicationAdapter {
 	private Texture[][] figureToChange;
 	private Texture backGround;
 	private Texture pauseButton;
-	private Thread gameThread;
 
 	private boolean[][] map;
 	private int height;
@@ -47,6 +50,8 @@ public class Tetris extends ApplicationAdapter {
 	private int score;
 	private Field field;
 	private Figure figure;
+	private FigureGenThread figureThread;
+	private FieldUpdateThread fieldThread;
 
 	@Override
 	public void create () {
@@ -66,9 +71,13 @@ public class Tetris extends ApplicationAdapter {
 		score = 0;
 		field = new Field();
 		textureField = field.getField();
-		gameThread = new Thread();
+		figure = new Figure();
+		figureThread = new FigureGenThread(figure);
+		figureThread.start();
+		fieldThread = new FieldUpdateThread(field, figure);
+		fieldThread.start();
 
-		sound = Gdx.audio.newSound(Gdx.files.internal("data/Megalovania.wav"));
+		sound = Gdx.audio.newSound(Gdx.files.internal("data/megalovania.wav"));
 		soundId = sound.play();
 		sound.setLooping(soundId, true);
 		batch = new SpriteBatch();
@@ -80,6 +89,7 @@ public class Tetris extends ApplicationAdapter {
 		camera.setToOrtho(false, WIDTH, HEIGHT);
 		camera.update();
 
+
 		newMap();
 
 		Gdx.input.setInputProcessor(new InputAdapter() {
@@ -89,6 +99,7 @@ public class Tetris extends ApplicationAdapter {
 					keycode == Input.Keys.RIGHT ||
 					keycode == Input.Keys.D
 				) {
+					System.out.println(Arrays.deepToString(figure.getShape()));
 					handleRightClick();
 				} else if (
 					keycode == Input.Keys.LEFT ||
@@ -180,7 +191,7 @@ public class Tetris extends ApplicationAdapter {
 		backGround.dispose();
 		pauseButton.dispose();
 		field.dispose();
-		batch.dispose();
+//		batch.dispose();
 	}
 
 	@Override
@@ -219,7 +230,6 @@ public class Tetris extends ApplicationAdapter {
 				200
 		);
 
-		figure = new Figure();
 		figureToChange = figure.getShape();
 		field.draw(batch, textureField);
 		batch.end();

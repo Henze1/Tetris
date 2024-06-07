@@ -20,13 +20,10 @@ public class Figure {
     private final List<Texture> blocks;
     private final Random random;
 
+    private int size;
+
     public Figure() {
         blocks = new ArrayList<>();
-        random = new Random();
-    }
-    public void setFigure() {
-        int value = random.nextInt(7);
-
         blocks.add(new Texture("data/7251.png"));//red,0
         blocks.add(new Texture("data/7252.png"));//blue,1
         blocks.add(new Texture("data/7253.png"));//green,2
@@ -35,6 +32,11 @@ public class Figure {
         blocks.add(new Texture("data/7257.png"));//pink,4
         blocks.add(new Texture("data/7259.png"));//light blue,6
         blocks.add(new Texture("data/7262.png"));//brown for free spaces,7
+        random = new Random();
+    }
+
+    public synchronized void setFigure() {
+        int value = random.nextInt(7);
 
         switch (value) {
             case I_Shape:
@@ -59,113 +61,123 @@ public class Figure {
                 setZShape(random.nextInt(7));
                 break;
         }
-
     }
 
-    private void setIShape(int num) {
+    private synchronized void setIShape(int num) {
         this.shapeNumbers = new int[][] {
-            {1, 0, 0, 0},
-            {1, 0, 0, 0},
-            {1, 0, 0, 0},
-            {1, 0, 0, 0}
+                {1, 0, 0, 0},
+                {1, 0, 0, 0},
+                {1, 0, 0, 0},
+                {1, 0, 0, 0}
         };
 
         this.shapes = new Texture[][] {
-            {blocks.get(num), blocks.get(7), blocks.get(7), blocks.get(7)},
-            {blocks.get(num), blocks.get(7), blocks.get(7), blocks.get(7)},
-            {blocks.get(num), blocks.get(7), blocks.get(7), blocks.get(7)},
-            {blocks.get(num), blocks.get(7), blocks.get(7), blocks.get(7)}
+                {blocks.get(num), blocks.get(7), blocks.get(7), blocks.get(7)},
+                {blocks.get(num), blocks.get(7), blocks.get(7), blocks.get(7)},
+                {blocks.get(num), blocks.get(7), blocks.get(7), blocks.get(7)},
+                {blocks.get(num), blocks.get(7), blocks.get(7), blocks.get(7)}
         };
+        size = 4;
     }
 
-    private void setJShape(int num) {
+    private synchronized void setJShape(int num) {
         this.shapeNumbers = new int[][] {
-            {0, 1, 0},
-            {0, 1, 0},
-            {1, 1, 0}
+                {0, 1, 0},
+                {0, 1, 0},
+                {1, 1, 0}
         };
 
         this.shapes = new Texture[][] {
-            {blocks.get(7), blocks.get(num), blocks.get(7)},
-            {blocks.get(7), blocks.get(num), blocks.get(7)},
-            {blocks.get(num), blocks.get(num), blocks.get(7)}
+                {blocks.get(7), blocks.get(num), blocks.get(7)},
+                {blocks.get(7), blocks.get(num), blocks.get(7)},
+                {blocks.get(num), blocks.get(num), blocks.get(7)}
         };
+        size = 3;
     }
 
-    private void setLShape(int num) {
+    private synchronized void setLShape(int num) {
         this.shapeNumbers = new int[][] {
-            {1, 0, 0},
-            {1, 0, 0},
-            {1, 1, 0}
+                {1, 0, 0},
+                {1, 0, 0},
+                {1, 1, 0}
         };
 
         this.shapes = new Texture[][] {
-            {blocks.get(num), blocks.get(7), blocks.get(7)},
-            {blocks.get(num), blocks.get(7), blocks.get(7)},
-            {blocks.get(num), blocks.get(num), blocks.get(7)}
+                {blocks.get(num), blocks.get(7), blocks.get(7)},
+                {blocks.get(num), blocks.get(7), blocks.get(7)},
+                {blocks.get(num), blocks.get(num), blocks.get(7)}
         };
+        size = 3;
     }
 
-    private void setOShape(int num) {
+    private synchronized void setOShape(int num) {
         this.shapeNumbers = new int[][] {
-            {1, 1},
-            {1, 1}
+                {1, 1},
+                {1, 1}
         };
 
         this.shapes = new Texture[][] {
-            {blocks.get(num), blocks.get(num)},
-            {blocks.get(num), blocks.get(num)}
+                {blocks.get(num), blocks.get(num)},
+                {blocks.get(num), blocks.get(num)}
         };
+        size = 2;
     }
 
-    private void setSShape(int num) {
+    private synchronized void setSShape(int num) {
         this.shapeNumbers = new int[][] {
-            {0, 1, 1},
-            {1, 1, 0},
-            {0, 0, 0}
+                {0, 1, 1},
+                {1, 1, 0},
+                {0, 0, 0}
         };
 
         this.shapes = new Texture[][] {
-            {blocks.get(7), blocks.get(num), blocks.get(num)},
-            {blocks.get(num), blocks.get(num), blocks.get(7)},
-            {blocks.get(7), blocks.get(7), blocks.get(7)}
+                {blocks.get(7), blocks.get(num), blocks.get(num)},
+                {blocks.get(num), blocks.get(num), blocks.get(7)},
+                {blocks.get(7), blocks.get(7), blocks.get(7)}
         };
+        size = 3;
     }
 
-    private void setZShape(int num) {
+    private synchronized void setZShape(int num) {
         this.shapeNumbers = new int[][] {
-            {1, 1, 0},
-            {0, 1, 1},
-            {0, 0, 0}
+                {1, 1, 0},
+                {0, 1, 1},
+                {0, 0, 0}
         };
 
         this.shapes = new Texture[][] {
-            {blocks.get(num), blocks.get(num), blocks.get(7)},
-            {blocks.get(7), blocks.get(num), blocks.get(num)},
-            {blocks.get(7), blocks.get(7), blocks.get(7)}
+                {blocks.get(num), blocks.get(num), blocks.get(7)},
+                {blocks.get(7), blocks.get(num), blocks.get(num)},
+                {blocks.get(7), blocks.get(7), blocks.get(7)}
         };
+        size = 3;
     }
 
-    private void setTShape(int num) {
+    private synchronized void setTShape(int num) {
         this.shapeNumbers = new int[][] {
-            {0, 1, 0},
-            {1, 1, 1},
-            {0, 0, 0}
+                {0, 1, 0},
+                {1, 1, 1},
+                {0, 0, 0}
         };
 
         this.shapes = new Texture[][] {
-            {blocks.get(7), blocks.get(num), blocks.get(7)},
-            {blocks.get(num), blocks.get(num), blocks.get(num)},
-            {blocks.get(7), blocks.get(7), blocks.get(7)}
+                {blocks.get(7), blocks.get(num), blocks.get(7)},
+                {blocks.get(num), blocks.get(num), blocks.get(num)},
+                {blocks.get(7), blocks.get(7), blocks.get(7)}
         };
+        size = 3;
     }
 
-    public Texture[][] getShape() {
+    public synchronized Texture[][] getShape() {
         return shapes;
     }
 
+    public synchronized int getSize() {
+        return size;
+    }
+
     //just in case I need to get the shape numbers
-    public int[][] getShapeNumbers() {
+    public synchronized int[][] getShapeNumbers() {
         return shapeNumbers;
     }
 }
