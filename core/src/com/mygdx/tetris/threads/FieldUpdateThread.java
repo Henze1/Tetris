@@ -12,10 +12,21 @@ public class FieldUpdateThread extends Thread {
     }
     @Override
     public void run() {
+        System.out.println("In the thread FieldUpdate");
         while (true) {
-            field.updateField(figure);
             try {
-                Thread.sleep(2000);
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                field.updateField(figure);
+                System.out.println(FieldUpdateThread.currentThread().getName());
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                Thread.sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

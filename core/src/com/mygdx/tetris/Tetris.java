@@ -1,6 +1,7 @@
 package com.mygdx.tetris;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.tetris.threads.FieldUpdateThread;
 import com.mygdx.tetris.threads.FigureGenThread;
 
+import java.awt.*;
 import java.util.Arrays;
 
 public class Tetris extends ApplicationAdapter {
@@ -28,20 +30,16 @@ public class Tetris extends ApplicationAdapter {
 	private BitmapFont font;
 	private ScreenViewport viewport;
 	private Sound sound;
-	private Texture[][] textureField;
-	private Texture[][] figureToChange;
+	private Texture[][] fieldTexture;
+//	private Texture[][] figureToChange;
 	private Texture backGround;
 	private Texture pauseButton;
 
-	private boolean[][] map;
-	private int height;
-	private int width;
 	private boolean gamePaused;
 	private boolean gameEnded;
 	private boolean gameLost;
 	private boolean rightKeyPressed;
 	private boolean leftKeyPressed;
-	private boolean upKeyPressed;
 	private boolean downKeyPressed;
 	private boolean spaceKeyPressed;
 	private long gamePauseTime;
@@ -55,22 +53,20 @@ public class Tetris extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-		height = 22;
-		width = 14;
-		map = new boolean[height][width];
+		Graphics.DisplayMode displayMode = Gdx.graphics.getDisplayMode();
+		Gdx.graphics.setWindowedMode(WIDTH, HEIGHT);
 		gamePaused = false;
 		gameEnded = false;
 		gameLost = false;
 		rightKeyPressed = false;
 		leftKeyPressed = false;
-		upKeyPressed = false;
 		downKeyPressed = false;
 		spaceKeyPressed = false;
 		gamePauseTime = 0;
 		gameEndedTime = 0;
 		score = 0;
 		field = new Field();
-		textureField = field.getField();
+		fieldTexture = field.getField();
 		figure = new Figure();
 		figureThread = new FigureGenThread(figure);
 		figureThread.start();
@@ -78,8 +74,8 @@ public class Tetris extends ApplicationAdapter {
 		fieldThread.start();
 
 		sound = Gdx.audio.newSound(Gdx.files.internal("data/megalovania.wav"));
-		soundId = sound.play();
-		sound.setLooping(soundId, true);
+//		soundId = sound.play();
+//		sound.setLooping(soundId, true);
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 		font = new BitmapFont();
@@ -90,8 +86,6 @@ public class Tetris extends ApplicationAdapter {
 		camera.update();
 
 
-		newMap();
-
 		Gdx.input.setInputProcessor(new InputAdapter() {
 			@Override
 			public boolean keyDown(int keycode) {
@@ -99,18 +93,12 @@ public class Tetris extends ApplicationAdapter {
 					keycode == Input.Keys.RIGHT ||
 					keycode == Input.Keys.D
 				) {
-					System.out.println(Arrays.deepToString(figure.getShape()));
 					handleRightClick();
 				} else if (
 					keycode == Input.Keys.LEFT ||
 					keycode == Input.Keys.A
 				) {
 					handleLeftClick();
-				} else if (
-					keycode == Input.Keys.UP ||
-					keycode == Input.Keys.W
-				) {
-					handleUpClick();
 				} else if (
 					keycode == Input.Keys.DOWN ||
 					keycode == Input.Keys.S
@@ -169,11 +157,11 @@ public class Tetris extends ApplicationAdapter {
 			if (gameLost) {
 				gameEnded = true;
 				gameEndedTime = TimeUtils.millis();
+			} else if (gamePaused) {
+				drawPauseScreen();
+				gamePauseTime = TimeUtils.millis();
 			}
-		} else if (gamePaused) {
-			drawPauseScreen();
-			gamePauseTime = TimeUtils.millis();
-		} else {
+		}  else {
 			drawEndScreen();
 			if (TimeUtils.timeSinceMillis(gameEndedTime) > 2000) {
 				create();
@@ -185,12 +173,12 @@ public class Tetris extends ApplicationAdapter {
 	public void dispose () {
 		System.out.println("Disposed");// may be removed
 		sound.dispose();
-		font.dispose();
 		batch.dispose();
 		shapeRenderer.dispose();
+		field.dispose();
+		font.dispose();
 		backGround.dispose();
 		pauseButton.dispose();
-		field.dispose();
 //		batch.dispose();
 	}
 
@@ -230,8 +218,8 @@ public class Tetris extends ApplicationAdapter {
 				200
 		);
 
-		figureToChange = figure.getShape();
-		field.draw(batch, textureField);
+//		figureToChange = figure.getShape();
+		field.draw(batch, fieldTexture);
 		batch.end();
 	}
 
@@ -241,17 +229,6 @@ public class Tetris extends ApplicationAdapter {
 
 	private void drawEndScreen() {
 		//TODO: Implement drawEndScreen logic
-	}
-
-	private void newMap() {
-		gameEnded = false;
-
-		//TODO: Implement newMap logic
-		for(int x = 0; x < height; x++) {
-			for(int y = 0; y < width; y++) {
-				map[x][y] = false;
-			}
-		}
 	}
 
 	private void handleRightClick() {
@@ -269,14 +246,10 @@ public class Tetris extends ApplicationAdapter {
 		System.out.println("Down or S Clicked");
 	}
 
-	private void handleUpClick() {
-		//TODO: Implement handleUpClick logic
-		System.out.println("Up or W Clicked");
-	}
-
 	private void handleSpaceClick() {
 		//TODO: Implement handleSpaceClick logic
 		System.out.println("Space or ESCAPE Clicked");
+		System.out.println(Arrays.deepToString(figure.getShape()));
 	}
 
 

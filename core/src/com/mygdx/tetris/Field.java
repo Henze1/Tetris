@@ -60,32 +60,51 @@ public class Field {
 
     public void dispose() {
         borderTexture.dispose();
+        freeSpaceTexture.dispose();
     }
 
     public Texture[][] getField() {
         return field;
     }
 
-    public void updateField(Figure figure) {
-        int x , y;
-        int row, col;
+    public void updateField(Figure figure) throws InterruptedException {
+        int figureSize = figure.getSize();
+        Texture[][] figureToSet = figure.getShape();
+        int y = figureSize - 1;
+        int col, row = 0;
 
-        if(figure.getSize() == 2) {
-            for (row = 6, x = 0; row < 8 && x < figure.getSize(); row++, x++) {
-                for (col = 0, y = 0; col < 4 && y < figure.getSize(); col++, y++) {
-                    if (figure.getShapeNumbers()[x][y] == 1) {
-                        field[col][row] = figure.getShape()[x][y];
-                    }
+        //TODO: Implement updateField logic
+        if(figureSize == 2) {
+            for (row = 0; row < figureSize; row++) {
+                for (col = 6; col < 8; col++) {
+                    field[row][col] = figureToSet[row][y];
                 }
+                Thread.sleep(1000);
+                for (col = 6; col < 8; col++) {
+                    field[row+1][col] = figureToSet[row][y];
+                    if (y == 0) break;
+                }
+                --y;
             }
         } else {
-            for (row = 5, x = 0; row < 9 && x < figure.getSize(); row++, x++) {
-                for (col = 0, y = 0; col < 4 && y < figure.getSize(); col++, y++) {
-                    if (figure.getShapeNumbers()[x][y] == 1) {
-                        field[col][row] = figure.getShape()[x][y];
-                    }
+            for (row = 0; row < figureSize; row++) {
+                for (col = 5; col < 9; col++) {
+                    field[row][col] = figureToSet[row][y];
                 }
+                for (col = 5; col < 9; col++) {
+                    Thread.sleep(1000);
+                    field[row+1][col] = figureToSet[row][y];
+                    if (y == 0) break;
+                }
+                --y;
             }
         }
+    }
+
+    public void updateFigureFallDown(Figure figure) {
+//        int x, y, row, col;
+//        for (x = 0; i < ; i++) {
+//
+//        }
     }
 }

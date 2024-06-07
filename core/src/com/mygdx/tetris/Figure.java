@@ -10,13 +10,13 @@ public class Figure {
     private static final int I_Shape = 0;
     private static final int J_Shape = 1;
     private static final int L_Shape = 2;
-    private static final int S_Shape = 4;
-    private static final int Z_Shape = 6;
     private static final int O_Shape = 3;
+    private static final int S_Shape = 4;
     private static final int T_Shape = 5;
+    private static final int Z_Shape = 6;
 
     private int[][] shapeNumbers;
-    private Texture[][] shapes;
+    private Texture[][] shape;
     private final List<Texture> blocks;
     private final Random random;
 
@@ -71,7 +71,7 @@ public class Figure {
                 {1, 0, 0, 0}
         };
 
-        this.shapes = new Texture[][] {
+        this.shape = new Texture[][] {
                 {blocks.get(num), blocks.get(7), blocks.get(7), blocks.get(7)},
                 {blocks.get(num), blocks.get(7), blocks.get(7), blocks.get(7)},
                 {blocks.get(num), blocks.get(7), blocks.get(7), blocks.get(7)},
@@ -87,7 +87,7 @@ public class Figure {
                 {1, 1, 0}
         };
 
-        this.shapes = new Texture[][] {
+        this.shape = new Texture[][] {
                 {blocks.get(7), blocks.get(num), blocks.get(7)},
                 {blocks.get(7), blocks.get(num), blocks.get(7)},
                 {blocks.get(num), blocks.get(num), blocks.get(7)}
@@ -102,7 +102,7 @@ public class Figure {
                 {1, 1, 0}
         };
 
-        this.shapes = new Texture[][] {
+        this.shape = new Texture[][] {
                 {blocks.get(num), blocks.get(7), blocks.get(7)},
                 {blocks.get(num), blocks.get(7), blocks.get(7)},
                 {blocks.get(num), blocks.get(num), blocks.get(7)}
@@ -116,7 +116,7 @@ public class Figure {
                 {1, 1}
         };
 
-        this.shapes = new Texture[][] {
+        this.shape = new Texture[][] {
                 {blocks.get(num), blocks.get(num)},
                 {blocks.get(num), blocks.get(num)}
         };
@@ -130,7 +130,7 @@ public class Figure {
                 {0, 0, 0}
         };
 
-        this.shapes = new Texture[][] {
+        this.shape = new Texture[][] {
                 {blocks.get(7), blocks.get(num), blocks.get(num)},
                 {blocks.get(num), blocks.get(num), blocks.get(7)},
                 {blocks.get(7), blocks.get(7), blocks.get(7)}
@@ -145,7 +145,7 @@ public class Figure {
                 {0, 0, 0}
         };
 
-        this.shapes = new Texture[][] {
+        this.shape = new Texture[][] {
                 {blocks.get(num), blocks.get(num), blocks.get(7)},
                 {blocks.get(7), blocks.get(num), blocks.get(num)},
                 {blocks.get(7), blocks.get(7), blocks.get(7)}
@@ -160,7 +160,7 @@ public class Figure {
                 {0, 0, 0}
         };
 
-        this.shapes = new Texture[][] {
+        this.shape = new Texture[][] {
                 {blocks.get(7), blocks.get(num), blocks.get(7)},
                 {blocks.get(num), blocks.get(num), blocks.get(num)},
                 {blocks.get(7), blocks.get(7), blocks.get(7)}
@@ -169,14 +169,13 @@ public class Figure {
     }
 
     public synchronized Texture[][] getShape() {
-        return shapes;
+        return shape;
     }
 
     public synchronized int getSize() {
         return size;
     }
 
-    //just in case I need to get the shape numbers
     public synchronized int[][] getShapeNumbers() {
         return shapeNumbers;
     }
