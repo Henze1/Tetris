@@ -24,7 +24,7 @@ public class Tetris extends ApplicationAdapter {
 	public static final int FRAME_WIDTH = 688;
 	public static final int FRAME_HEIGHT = HEIGHT;
 
-	private OrthographicCamera camera;
+	public static OrthographicCamera camera;
 	private SpriteBatch batch;
 	private ShapeRenderer shapeRenderer;
 	private BitmapFont font;
@@ -73,7 +73,7 @@ public class Tetris extends ApplicationAdapter {
 		fieldThread = new FieldUpdateThread(field, figure);
 		fieldThread.start();
 
-		sound = Gdx.audio.newSound(Gdx.files.internal("data/megalovania.wav"));
+        sound = Gdx.audio.newSound(Gdx.files.internal("data/megalovania.wav"));
 //		soundId = sound.play();
 //		sound.setLooping(soundId, true);
 		batch = new SpriteBatch();

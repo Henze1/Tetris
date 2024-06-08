@@ -12,14 +12,12 @@ public class FigureGenThread extends Thread {
 
     @Override
     public void run() {
-        System.out.println("In the thread FigureGen");
         while (true) {
             figure.setFigure();
-            System.out.println(FieldUpdateThread.currentThread().getName());
             try {
-                Thread.sleep(9000);
+                Thread.sleep(21000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }
